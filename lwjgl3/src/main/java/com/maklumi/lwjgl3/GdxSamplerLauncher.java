@@ -1,12 +1,16 @@
 package com.maklumi.lwjgl3;
 
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
+import com.sample.common.SampleFactory;
+import com.sample.common.SampleInfos;
+
 import javax.swing.*;
 import java.awt.*;
-
-import com.badlogic.gdx.backends.lwjgl.*;
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.ReflectionException;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class GdxSamplerLauncher extends JFrame {
 
@@ -17,8 +21,24 @@ public class GdxSamplerLauncher extends JFrame {
 
     // enables us to embed libgdx app/game into java desktop app
     private LwjglAWTCanvas lwjglAWTCanvas;
+    private JList<String> sampleList;
+    private JPanel controlPanel;
 
     public GdxSamplerLauncher() throws HeadlessException {
+        createControlPanel();
+
+        Container container = getContentPane();
+        container.add(controlPanel, BorderLayout.WEST);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (lwjglAWTCanvas != null) {
+                    // stop will call our dispose and stop libgdx application
+                    lwjglAWTCanvas.stop();
+                }
+            }
+        });
         setTitle(GdxSamplerLauncher.class.getSimpleName());
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
         setSize(WIDTH, HEIGHT);
@@ -28,19 +48,12 @@ public class GdxSamplerLauncher extends JFrame {
         // tell window (jframe) to resize and layout our components
         pack();
         setVisible(true);
-
-        launchSample("com.sample.InputPollingSample");
     }
 
     // == main ==
     public static void main(String[] args) {
         // must be used to run our jframe properly
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new GdxSamplerLauncher();
-            }
-        });
+        SwingUtilities.invokeLater(GdxSamplerLauncher::new);
     }
 
     private void launchSample(String name) {
@@ -53,18 +66,60 @@ public class GdxSamplerLauncher extends JFrame {
             container.remove(lwjglAWTCanvas.getCanvas());
         }
 
-        ApplicationListener sample = null;
+        ApplicationListener sample = SampleFactory.newSample(name);
 
-        try {
-            Class<ApplicationListener> clazz = ClassReflection.forName(name);
-            sample = ClassReflection.newInstance(clazz);
-        } catch (ReflectionException e) {
-            e.printStackTrace();
-        }
         lwjglAWTCanvas = new LwjglAWTCanvas(sample);
         lwjglAWTCanvas.getCanvas().setSize(CANVAS_WIDTH, HEIGHT);
         container.add(lwjglAWTCanvas.getCanvas(), BorderLayout.CENTER);
 
         pack();
+    }
+
+    private void createControlPanel() {
+        controlPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        // constraints for scroll pane
+        c.gridx = 0; // column
+        c.gridy = 0; // row
+        c.fill = GridBagConstraints.VERTICAL; // fill vertically
+        c.weighty = 1; // weight used when fill empty space
+
+        sampleList = new JList(SampleInfos.getSampleNames().toArray());
+        sampleList.setFixedCellWidth(CELL_WIDTH);
+        sampleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        sampleList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    launchSelectedSample();
+                }
+            }
+        });
+
+        JScrollPane scrollPane = new JScrollPane(sampleList);
+        controlPanel.add(scrollPane, c);
+
+        // constraints for button
+        c.gridx = 0;
+        c.gridy = 1;
+        c.fill = GridBagConstraints.HORIZONTAL; // fill horizontally
+        c.weighty = 0;
+
+        JButton launchButton = new JButton("Launch Sample");
+        launchButton.addActionListener(e -> launchSelectedSample());
+
+        controlPanel.add(launchButton, c);
+    }
+
+    private void launchSelectedSample() {
+        String sampleName = sampleList.getSelectedValue();
+
+        if (sampleName == null || sampleName.isEmpty()) {
+            System.out.println("Sample name is empty cannot launch");
+            return;
+        }
+
+        launchSample(sampleName);
     }
 }

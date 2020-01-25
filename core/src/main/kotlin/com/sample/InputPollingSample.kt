@@ -1,6 +1,5 @@
 package com.sample
 
-import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.GL20
@@ -8,8 +7,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.sample.common.SampleBase
+import com.sample.common.SampleInfo
 
-class InputPollingSample : ApplicationAdapter() {
+class InputPollingSample : SampleBase() {
+
+    companion object {
+        val SAMPLE_INFO = SampleInfo(InputPollingSample::class.java)
+    }
 
     val camera = OrthographicCamera()
     val viewport = FitViewport(1000f, 800f, camera)

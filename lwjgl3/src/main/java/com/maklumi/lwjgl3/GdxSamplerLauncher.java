@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Collection;
 
 public class GdxSamplerLauncher extends JFrame {
 
@@ -85,7 +86,8 @@ public class GdxSamplerLauncher extends JFrame {
         c.fill = GridBagConstraints.VERTICAL; // fill vertically
         c.weighty = 1; // weight used when fill empty space
 
-        sampleList = new JList(SampleInfos.getSampleNames().toArray());
+        Collection<String> names = SampleInfos.getSampleNames();
+        sampleList = new JList<>(names.toArray(new String[8]));
         sampleList.setFixedCellWidth(CELL_WIDTH);
         sampleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         sampleList.addMouseListener(new MouseAdapter() {

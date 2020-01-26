@@ -2,10 +2,7 @@
 
 package com.sample.common
 
-import com.sample.InputPollingSample
-import com.sample.OrthographicCameraSample
-import com.sample.SpriteBatchSample
-import com.sample.ViewportSample
+import com.sample.*
 
 object SampleInfos {
 
@@ -13,14 +10,15 @@ object SampleInfos {
             InputPollingSample.SAMPLE_INFO,
             OrthographicCameraSample.SAMPLE_INFO,
             ViewportSample.SAMPLE_INFO,
-            SpriteBatchSample.SAMPLE_INFO
+            SpriteBatchSample.SAMPLE_INFO,
+            ShapeRendererSample.SAMPLE_INFO
     )
 
     @JvmStatic
     val sampleNames: List<String>
         get() = ALL.map { it.name }
 
-    fun find(name: String): SampleInfo<*>? {
+    fun find(name: String): SampleInfo<out SampleBase>? {
         return ALL.find { it.name == name }
     }
 

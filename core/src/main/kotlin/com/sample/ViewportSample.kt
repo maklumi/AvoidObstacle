@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ArrayMap
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.*
-import com.maklumi.util.GdxUtils
+import com.obstacleavoid.util.GdxUtils
 import com.sample.common.SampleBase
 import com.sample.common.SampleInfo
 

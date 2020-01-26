@@ -1,9 +1,9 @@
-package com.maklumi.lwjgl3;
+package com.obstacleavoid.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.maklumi.AvoidObstacle;
-import com.maklumi.config.GameConfig;
+import com.obstacleavoid.AvoidObstacle;
+import com.obstacleavoid.config.GameConfig;
 
 public class LwjglLauncher {
     public static void main(String[] args) {

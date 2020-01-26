@@ -1,4 +1,4 @@
-package com.maklumi.util;
+package com.obstacleavoid.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

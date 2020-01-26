@@ -1,6 +1,6 @@
 @file:JvmName("ViewportUtils")
 
-package com.maklumi.util
+package com.obstacleavoid.util
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer

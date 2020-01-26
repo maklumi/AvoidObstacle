@@ -1,4 +1,4 @@
-package com.maklumi.lwjgl3;
+package com.obstacleavoid.lwjgl3;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;

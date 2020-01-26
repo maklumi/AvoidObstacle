@@ -1,9 +1,9 @@
-package com.maklumi
+package com.obstacleavoid
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import com.maklumi.screen.GameScreen
+import com.obstacleavoid.screen.GameScreen
 
 class AvoidObstacle : Game() {
 

@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.maklumi.util.GdxUtils
+import com.obstacleavoid.util.GdxUtils
 import com.sample.common.SampleBase
 import com.sample.common.SampleInfo
 

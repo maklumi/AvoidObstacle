@@ -1,6 +1,6 @@
 @file:JvmName("GameConfig")
 
-package com.maklumi.config
+package com.obstacleavoid.config
 
 const val WIDTH = 480
 const val HEIGHT = 800

@@ -3,11 +3,14 @@ package com.obstacleavoid.screen
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.obstacleavoid.config.WORLD_HEIGHT
 import com.obstacleavoid.config.WORLD_WIDTH
+import com.obstacleavoid.entity.Obstacle
 import com.obstacleavoid.entity.Player
 import com.obstacleavoid.util.GdxUtils
 import com.obstacleavoid.util.ViewportUtils
@@ -20,6 +23,8 @@ class GameScreen : Screen {
     private lateinit var viewport: Viewport
     private lateinit var renderer: ShapeRenderer
     private val player = Player()
+    private val obstacles = Array<Obstacle>()
+    private var spawnTimer = 0f
 
     override fun show() {
         log.debug("show()")
@@ -32,7 +37,37 @@ class GameScreen : Screen {
 
     override fun render(delta: Float) {
         GdxUtils.clearScreen()
+        updateObstacles(delta)
         drawDebug(delta)
+    }
+
+    private fun updateObstacles(delta: Float) {
+        val iterable = Array.ArrayIterable<Obstacle>(obstacles)
+        for (obstacle in iterable) {
+            obstacle.update()
+        }
+        createNewObstacle(delta)
+    }
+
+    private fun createNewObstacle(delta: Float) {
+        spawnTimer += delta
+        if (spawnTimer > .5f) {
+            val obstacle = Obstacle()
+            val x = MathUtils.random(obstacle.radius, WORLD_WIDTH - obstacle.radius)
+            val y = WORLD_HEIGHT + obstacle.radius * 2
+            obstacle.setPosition(x, y)
+            obstacles.add(obstacle)
+            spawnTimer = 0f
+        }
+    }
+
+    private fun drawObstaclesDebug() {
+        renderer.begin(ShapeRenderer.ShapeType.Line)
+        val iterable = Array.ArrayIterable<Obstacle>(obstacles)
+        for (obstacle in iterable) {
+            obstacle.drawObstacleDebug(renderer)
+        }
+        renderer.end()
     }
 
     private fun drawDebug(delta: Float) {
@@ -40,6 +75,7 @@ class GameScreen : Screen {
         DebugCameraController.applyTo(camera)
         ViewportUtils.drawGrid(viewport, renderer)
         drawPlayerDebug()
+        drawObstaclesDebug()
     }
 
     private fun drawPlayerDebug() {

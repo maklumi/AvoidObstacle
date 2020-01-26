@@ -3,25 +3,8 @@ package com.obstacleavoid.entity
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.math.Circle
 
-class Player {
-
-    var x = 0f
-    var y = 0f
-    var radius = 1f
-
-
-    val bounds: Circle = Circle(x, y, radius)
-        get() {
-            field.setPosition(x, y)
-            return field
-        }
-
-    fun setPosition(x: Float, y: Float) {
-        this.x = x
-        this.y = y
-    }
+class Player : GameObjectBase(0.4f) {
 
     fun drawPlayerDebug(r: ShapeRenderer) {
         r.begin(ShapeRenderer.ShapeType.Line)

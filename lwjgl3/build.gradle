@@ -10,6 +10,8 @@ dependencies {
 //	api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
 	api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
 	api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 }
 
 import org.gradle.internal.os.OperatingSystem

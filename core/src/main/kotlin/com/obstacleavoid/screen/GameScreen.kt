@@ -3,6 +3,7 @@ package com.obstacleavoid.screen
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Logger
@@ -36,9 +37,22 @@ class GameScreen : Screen {
     }
 
     override fun render(delta: Float) {
+        if (isCollision()) {
+            return
+        }
         GdxUtils.clearScreen()
         updateObstacles(delta)
         drawDebug(delta)
+    }
+
+    private fun isCollision(): Boolean {
+        var isOverlap = false
+        val iterable = Array.ArrayIterable<Obstacle>(obstacles)
+        for (obstacle in iterable) {
+            isOverlap = Intersector.overlaps(player.bounds, obstacle.bounds)
+            if (isOverlap) return isOverlap
+        }
+        return isOverlap
     }
 
     private fun updateObstacles(delta: Float) {

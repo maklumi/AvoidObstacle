@@ -2,16 +2,19 @@ package com.obstacleavoid.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.obstacleavoid.config.HUD_HEIGHT
 import com.obstacleavoid.config.HUD_WIDTH
 import com.obstacleavoid.config.WORLD_HEIGHT
 import com.obstacleavoid.config.WORLD_WIDTH
+import com.obstacleavoid.entity.Background
 import com.obstacleavoid.entity.Obstacle
 import com.obstacleavoid.util.GdxUtils
 import com.obstacleavoid.util.ViewportUtils
@@ -29,8 +32,16 @@ class GameRenderer(private val controller: GameLogic) {
     private val glyphLayout = GlyphLayout()
     private val batch = SpriteBatch()
 
+    private val playerTex = Texture(Gdx.files.internal("assets/gameplay/player.png"))
+    private val obstacleTex = Texture(Gdx.files.internal("assets/gameplay/obstacle.png"))
+    private val player = controller.player
+    private val obstacles = controller.obstacles
+    private val background = Background()
+
     fun render(delta: Float) {
         GdxUtils.clearScreen()
+        renderGamePlay()
+        checkTouch()
         renderUI()
         drawDebug(delta)
     }
@@ -45,6 +56,33 @@ class GameRenderer(private val controller: GameLogic) {
         renderer.dispose()
         batch.dispose()
         uiFont.dispose()
+    }
+
+    private fun renderGamePlay() {
+        viewport.apply()
+        batch.projectionMatrix = camera.combined
+        batch.begin()
+
+        batch.draw(background.texture, background.x, background.y, background.width, background.height)
+
+        batch.draw(playerTex, player.x, player.y, player.radius * 2, player.radius * 2)
+
+        val iterable = Array.ArrayIterable<Obstacle>(obstacles)
+        for (obstacle in iterable) {
+            batch.draw(obstacleTex, obstacle.x, obstacle.y, obstacle.radius * 2, obstacle.radius * 2)
+        }
+
+        batch.end()
+    }
+
+    private fun checkTouch() {
+        if (Gdx.input.isTouched && !controller.isGameOver) {
+            val screenPosition = Vector2(Gdx.input.x.toFloat(), Gdx.input.y.toFloat())
+            val worldPosition = viewport.unproject(Vector2(screenPosition))
+            player.x = worldPosition.x
+//            println("screen $screenPosition")
+//            println("world $worldPosition")
+        }
     }
 
     private fun renderUI() {

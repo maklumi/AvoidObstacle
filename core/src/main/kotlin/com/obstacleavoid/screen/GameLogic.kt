@@ -23,8 +23,11 @@ class GameLogic {
     private var timer = 0f
     val textScore: String
         get() = "SCORE: $displayedScore"
-    private var level = Difficulty.HARD
+    private var level = Difficulty.EASY
     private val obstaclePool = Pools.get(Obstacle::class.java, 40) // max 40 obstacles
+
+    val isGameOver: Boolean
+        get() = lives == 0
 
     init {
         player.setPosition(1.5f, 3.2f)
@@ -32,6 +35,7 @@ class GameLogic {
     }
 
     fun update(delta: Float) {
+        if (isGameOver) return
         updateObstacles(delta)
         updateScoreAndLives(delta)
     }
@@ -47,7 +51,14 @@ class GameLogic {
 
         if (isCollision()) {
             lives--
+            if (!isGameOver) restart()
         }
+    }
+
+    private fun restart() {
+        obstaclePool.freeAll(obstacles)
+        obstacles.clear()
+        player.setPosition(1.5f, 3.2f)
     }
 
     private fun smoothOutScoreDisplay(delta: Float) {

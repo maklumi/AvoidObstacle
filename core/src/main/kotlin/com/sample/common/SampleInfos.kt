@@ -12,7 +12,8 @@ object SampleInfos {
             ViewportSample.SAMPLE_INFO,
             SpriteBatchSample.SAMPLE_INFO,
             ShapeRendererSample.SAMPLE_INFO,
-            BitmapFontSample.SAMPLE_INFO
+            BitmapFontSample.SAMPLE_INFO,
+            PoolingSample.SAMPLE_INFO
     )
 
     @JvmStatic

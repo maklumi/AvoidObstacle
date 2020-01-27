@@ -3,6 +3,7 @@ package com.obstacleavoid.screen
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.Pools
 import com.obstacleavoid.config.Difficulty
 import com.obstacleavoid.config.WORLD_HEIGHT
 import com.obstacleavoid.config.WORLD_WIDTH
@@ -23,6 +24,7 @@ class GameLogic {
     val textScore: String
         get() = "SCORE: $displayedScore"
     private var level = Difficulty.HARD
+    private val obstaclePool = Pools.get(Obstacle::class.java, 40) // max 40 obstacles
 
     init {
         player.setPosition(1.5f, 3.2f)
@@ -75,12 +77,14 @@ class GameLogic {
             obstacle.update(level.speed)
         }
         createNewObstacle(delta)
+        removeObstacleOffScreen()
     }
 
     private fun createNewObstacle(delta: Float) {
         spawnTimer += delta
         if (spawnTimer > .5f) {
-            val obstacle = Obstacle()
+//            val obstacle = Obstacle()
+            val obstacle = obstaclePool.obtain()
             val x = MathUtils.random(obstacle.radius, WORLD_WIDTH - obstacle.radius)
             val y = WORLD_HEIGHT + obstacle.radius * 2
             obstacle.setPosition(x, y)
@@ -88,4 +92,15 @@ class GameLogic {
             spawnTimer = 0f
         }
     }
+
+    private fun removeObstacleOffScreen() {
+        val iterable = Array.ArrayIterable<Obstacle>(obstacles)
+        for (obstacle in iterable) {
+            if (obstacle.y < -3 * obstacle.radius) {
+                obstacles.removeValue(obstacle, true)
+                obstaclePool.free(obstacle) // free from pool
+            }
+        }
+    }
+
 }

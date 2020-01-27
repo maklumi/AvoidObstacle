@@ -1,7 +1,11 @@
 package com.obstacleavoid.screen
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.GlyphLayout
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils
@@ -9,8 +13,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.obstacleavoid.config.WORLD_HEIGHT
-import com.obstacleavoid.config.WORLD_WIDTH
+import com.obstacleavoid.config.*
 import com.obstacleavoid.entity.Obstacle
 import com.obstacleavoid.entity.Player
 import com.obstacleavoid.util.GdxUtils
@@ -26,6 +29,20 @@ class GameScreen : Screen {
     private val player = Player()
     private val obstacles = Array<Obstacle>()
     private var spawnTimer = 0f
+    private var lives = 3
+    private val textLives: String
+        get() = "LIVES: $lives"
+    private var score = 0
+    private var displayedScore = 0
+    private var timer = 0f
+    private val textScore: String
+        get() = "SCORE: $displayedScore"
+    private val uiFont = BitmapFont(Gdx.files.internal("assets/font/ui_font_32.fnt"))
+    private val hudCamera = OrthographicCamera()
+    private val hudViewport = FitViewport(HUD_WIDTH, HUD_HEIGHT, hudCamera)
+    private val glyphLayout = GlyphLayout()
+    private val batch = SpriteBatch()
+    private var level = Difficulty.HARD
 
     override fun show() {
         log.debug("show()")
@@ -37,20 +54,54 @@ class GameScreen : Screen {
     }
 
     override fun render(delta: Float) {
-        if (isCollision()) {
-            return
-        }
         GdxUtils.clearScreen()
         updateObstacles(delta)
+        updateScoreAndLives(delta)
+        renderUI()
         drawDebug(delta)
+    }
+
+    private fun renderUI() {
+        batch.projectionMatrix = hudCamera.combined
+        batch.begin()
+        glyphLayout.setText(uiFont, textLives)
+        uiFont.draw(batch, textLives, 20f, HUD_HEIGHT - glyphLayout.height)
+        glyphLayout.setText(uiFont, textScore)
+        uiFont.draw(batch, textScore, HUD_WIDTH - glyphLayout.width - 20f, HUD_HEIGHT - glyphLayout.height)
+        batch.end()
+    }
+
+    private fun updateScoreAndLives(delta: Float) {
+        timer += delta
+        if (timer > 2f) {
+            timer = 0f
+            score += MathUtils.random(10, 30)
+        }
+
+        smoothOutScoreDisplay(delta)
+
+        if (isCollision()) {
+            lives--
+        }
+    }
+
+    private fun smoothOutScoreDisplay(delta: Float) {
+        if (displayedScore < score) {
+//            displayedScore = Math.min(score, displayedScore + (delta * 60).toInt()) // is same as below
+            displayedScore = score.coerceAtMost(displayedScore + (delta * 60).toInt())
+        }
     }
 
     private fun isCollision(): Boolean {
         var isOverlap = false
         val iterable = Array.ArrayIterable<Obstacle>(obstacles)
         for (obstacle in iterable) {
+            if (obstacle.isAlreadyHit) continue
             isOverlap = Intersector.overlaps(player.bounds, obstacle.bounds)
-            if (isOverlap) return isOverlap
+            if (isOverlap) {
+                obstacle.isAlreadyHit = true
+                return true
+            }
         }
         return isOverlap
     }
@@ -58,7 +109,7 @@ class GameScreen : Screen {
     private fun updateObstacles(delta: Float) {
         val iterable = Array.ArrayIterable<Obstacle>(obstacles)
         for (obstacle in iterable) {
-            obstacle.update()
+            obstacle.update(level.speed)
         }
         createNewObstacle(delta)
     }
@@ -99,6 +150,7 @@ class GameScreen : Screen {
 
     override fun resize(width: Int, height: Int) {
         viewport.update(width, height, true)
+        hudViewport.update(width, height, true)
         ViewportUtils.debugPixelPerUnit(viewport)
     }
 
@@ -112,5 +164,7 @@ class GameScreen : Screen {
 
     override fun dispose() {
         renderer.dispose()
+        batch.dispose()
+        uiFont.dispose()
     }
 }

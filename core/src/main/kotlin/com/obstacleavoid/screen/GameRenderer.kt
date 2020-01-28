@@ -3,14 +3,14 @@ package com.obstacleavoid.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.obstacleavoid.assets.*
+import com.obstacleavoid.assets.FONT
+import com.obstacleavoid.assets.GAME_PLAY
 import com.obstacleavoid.assets.RegionNames.BACKGROUND
 import com.obstacleavoid.assets.RegionNames.OBSTACLE
 import com.obstacleavoid.assets.RegionNames.PLAYER
@@ -24,7 +24,7 @@ import com.obstacleavoid.util.GdxUtils
 import com.obstacleavoid.util.ViewportUtils
 import com.obstacleavoid.util.debug.DebugCameraController
 
-class GameRenderer(assetManager: AssetManager, private val controller: GameLogic) {
+class GameRenderer(private val batch: SpriteBatch, assetManager: AssetManager, private val controller: GameLogic) {
 
     private var camera = OrthographicCamera()
     private var viewport = FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera)
@@ -34,7 +34,6 @@ class GameRenderer(assetManager: AssetManager, private val controller: GameLogic
     private val hudCamera = OrthographicCamera()
     private val hudViewport = FitViewport(HUD_WIDTH, HUD_HEIGHT, hudCamera)
     private val glyphLayout = GlyphLayout()
-    private val batch = SpriteBatch()
 
     private val gameAtlas = assetManager[GAME_PLAY]
     private val playerTex = gameAtlas.findRegion(PLAYER)
@@ -63,7 +62,6 @@ class GameRenderer(assetManager: AssetManager, private val controller: GameLogic
 
     fun dispose() {
         renderer.dispose()
-        batch.dispose()
     }
 
     private fun renderGamePlay() {

@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.obstacleavoid.AvoidObstacle
 import com.obstacleavoid.assets.FONT
 import com.obstacleavoid.assets.GAME_PLAY
+import com.obstacleavoid.assets.UI_TEXTURE_ATLAS
+import com.obstacleavoid.assets.UI_SKIN
 import com.obstacleavoid.config.HUD_HEIGHT
 import com.obstacleavoid.config.HUD_WIDTH
 import com.obstacleavoid.config.WORLD_HEIGHT
@@ -39,10 +41,11 @@ class LoadingScreen(private val game: AvoidObstacle) : ScreenAdapter() {
         renderer = ShapeRenderer()
         assetManager.load(FONT)
         assetManager.load(GAME_PLAY)
+        assetManager.load(UI_SKIN)
+        assetManager.load(UI_TEXTURE_ATLAS)
     }
 
     override fun render(delta: Float) {
-        waitMillis(100L)
         update(delta)
         GdxUtils.clearScreen()
         viewport.apply()
@@ -51,9 +54,8 @@ class LoadingScreen(private val game: AvoidObstacle) : ScreenAdapter() {
         draw()
         renderer.end()
         if (changeScreen) {
-            game.screen = GameScreen(game)
+            game.screen = MenuScreen(game)
         }
-        waitMillis(10L)
     }
 
     override fun resize(width: Int, height: Int) {

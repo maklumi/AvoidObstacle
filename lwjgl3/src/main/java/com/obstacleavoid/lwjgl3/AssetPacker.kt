@@ -7,9 +7,9 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker
 object AssetPacker {
 
     private const val DRAW_DEBUG_OUTLINE = false
-    private const val INPUT = "lwjgl3/assets-raw/gameplay"
-    private const val OUTPUT = "assets/gameplay"
-    private const val ATLAS_NAME = "gameplay"
+    private const val INPUT = "lwjgl3/assets-raw/ui"
+    private const val OUTPUT = "assets/ui"
+    private const val ATLAS_NAME = "ui"
 
     @JvmStatic
     fun main(args: Array<String>) {

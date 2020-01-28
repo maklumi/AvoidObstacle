@@ -14,7 +14,10 @@ object SampleInfos {
             ShapeRendererSample.SAMPLE_INFO,
             BitmapFontSample.SAMPLE_INFO,
             PoolingSample.SAMPLE_INFO,
-            AssetManagerSample.SAMPLE_INFO
+            AssetManagerSample.SAMPLE_INFO,
+            CustomActorSample.SAMPLE_INFO,
+            ActionsSample.SAMPLE_INFO,
+            TableSample.SAMPLE_INFO
     )
 
     @JvmStatic

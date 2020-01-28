@@ -1,0 +1,9 @@
+package com.obstacleavoid.assets
+
+object RegionNames {
+
+    const val BACKGROUND = "background"
+    const val OBSTACLE = "obstacle"
+    const val PLAYER = "player"
+
+}

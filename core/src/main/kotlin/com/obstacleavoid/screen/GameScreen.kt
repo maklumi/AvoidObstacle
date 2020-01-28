@@ -3,10 +3,8 @@ package com.obstacleavoid.screen
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.utils.Logger
 import com.obstacleavoid.AvoidObstacle
-import com.obstacleavoid.assets.BACKGROUND
 import com.obstacleavoid.assets.FONT
-import com.obstacleavoid.assets.OBSTACLE
-import com.obstacleavoid.assets.PLAYER
+import com.obstacleavoid.assets.GAME_PLAY
 
 class GameScreen(game: AvoidObstacle) : Screen {
 
@@ -18,9 +16,7 @@ class GameScreen(game: AvoidObstacle) : Screen {
     override fun show() {
         log.debug("show()")
         assetManager.load(FONT)
-        assetManager.load(PLAYER)
-        assetManager.load(OBSTACLE)
-        assetManager.load(BACKGROUND)
+        assetManager.load(GAME_PLAY)
         assetManager.finishLoading()
 
         renderer = GameRenderer(assetManager, controller)

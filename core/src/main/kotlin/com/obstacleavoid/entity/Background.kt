@@ -1,12 +1,12 @@
 package com.obstacleavoid.entity
 
-import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.obstacleavoid.config.WORLD_HEIGHT
 import com.obstacleavoid.config.WORLD_WIDTH
 
 class Background {
 
-    var texture: Texture? = null
+    var texture: TextureRegion? = null
 
     val width = WORLD_WIDTH
 

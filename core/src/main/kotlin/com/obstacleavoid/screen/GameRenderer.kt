@@ -10,10 +10,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.obstacleavoid.assets.BACKGROUND
-import com.obstacleavoid.assets.FONT
-import com.obstacleavoid.assets.OBSTACLE
-import com.obstacleavoid.assets.PLAYER
+import com.obstacleavoid.assets.*
+import com.obstacleavoid.assets.RegionNames.BACKGROUND
+import com.obstacleavoid.assets.RegionNames.OBSTACLE
+import com.obstacleavoid.assets.RegionNames.PLAYER
 import com.obstacleavoid.config.HUD_HEIGHT
 import com.obstacleavoid.config.HUD_WIDTH
 import com.obstacleavoid.config.WORLD_HEIGHT
@@ -36,14 +36,15 @@ class GameRenderer(assetManager: AssetManager, private val controller: GameLogic
     private val glyphLayout = GlyphLayout()
     private val batch = SpriteBatch()
 
-    private val playerTex = assetManager.get(PLAYER)
-    private val obstacleTex = assetManager.get(OBSTACLE)
+    private val gameAtlas = assetManager[GAME_PLAY]
+    private val playerTex = gameAtlas.findRegion(PLAYER)
+    private val obstacleTex = gameAtlas.findRegion(OBSTACLE)
     private val player = controller.player
     private val obstacles = controller.obstacles
     private val background = Background()
 
     init {
-        background.texture = assetManager.get(BACKGROUND)
+        background.texture = gameAtlas.findRegion(BACKGROUND)
     }
 
     fun render(delta: Float) {

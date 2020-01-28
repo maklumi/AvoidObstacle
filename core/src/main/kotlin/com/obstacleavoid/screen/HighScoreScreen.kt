@@ -2,31 +2,33 @@ package com.obstacleavoid.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.obstacleavoid.AvoidObstacle
+import com.obstacleavoid.assets.FONT
 import com.obstacleavoid.assets.GAME_PLAY
 import com.obstacleavoid.assets.RegionNames
 import com.obstacleavoid.assets.UI_TEXTURE_ATLAS
+import com.obstacleavoid.common.GameManager
 import com.obstacleavoid.config.HUD_HEIGHT
 import com.obstacleavoid.config.HUD_WIDTH
 import com.obstacleavoid.util.GdxUtils
 
-
-class MenuScreen(private val game: AvoidObstacle) : ScreenAdapter() {
+class HighScoreScreen(private val game: AvoidObstacle) : ScreenAdapter() {
 
     companion object {
-        private val log = Logger(MenuScreen::class.java.simpleName, Logger.DEBUG)
+        private val log = Logger(HighScoreScreen::class.java.simpleName, Logger.DEBUG)
     }
 
     private val camera = OrthographicCamera()
@@ -46,68 +48,49 @@ class MenuScreen(private val game: AvoidObstacle) : ScreenAdapter() {
 
     private fun createUi(): Actor {
         val table = Table()
+
         val gamePlayAtlas: TextureAtlas = assetManager.get(GAME_PLAY)
+        val backgroundRegion = gamePlayAtlas.findRegion(RegionNames.BACKGROUND)
+
+        val font = assetManager.get(FONT)
+
         val uiAtlas: TextureAtlas = assetManager.get(UI_TEXTURE_ATLAS)
         val panelRegion = uiAtlas.findRegion(RegionNames.PANEL)
-        val backgroundRegion: TextureRegion = gamePlayAtlas.findRegion(RegionNames.BACKGROUND)
-        table.background = TextureRegionDrawable(backgroundRegion)
-        // play button
-        val playButton = createButton(uiAtlas, RegionNames.PLAY, RegionNames.PLAY_PRESSED)
-        playButton.addListener(object : ChangeListener() {
+        val backRegion = uiAtlas.findRegion(RegionNames.BACK)
+        val backPressedRegion = uiAtlas.findRegion(RegionNames.BACK_PRESSED)
+        val backButton = ImageButton(TextureRegionDrawable(backRegion), TextureRegionDrawable(backPressedRegion))
+        backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                play()
-            }
-        })
-        // high score button
-        val highScoreButton = createButton(uiAtlas, RegionNames.HIGH_SCORE, RegionNames.HIGH_SCORE_PRESSED)
-        highScoreButton.addListener(object : ChangeListener() {
-            override fun changed(event: ChangeEvent?, actor: Actor?) {
-                showHighScore()
-            }
-        })
-        // options button
-        val optionsButton = createButton(uiAtlas, RegionNames.OPTIONS, RegionNames.OPTIONS_PRESSED)
-        optionsButton.addListener(object : ChangeListener() {
-            override fun changed(event: ChangeEvent?, actor: Actor?) {
-                showOptions()
+                back()
             }
         })
 
+        val labelStyle = Label.LabelStyle(font, Color.WHITE)
+
+        table.background = TextureRegionDrawable(backgroundRegion)
+
+        val highScoreText = Label("HIGH SCORE", labelStyle)
+        val highScoreLabel = Label("${GameManager.highScore}", labelStyle)
+
         // setup table
-        val buttonTable = Table()
-        buttonTable.defaults().pad(20f)
-        buttonTable.background = TextureRegionDrawable(panelRegion)
-        buttonTable.add(playButton).row()
-        buttonTable.add(highScoreButton).row()
-        buttonTable.add(optionsButton).row()
-        buttonTable.center()
-        table.add(buttonTable)
+        val contentTable = Table()
+        contentTable.defaults().pad(20f)
+        contentTable.background = TextureRegionDrawable(panelRegion)
+        contentTable.add(highScoreText).row()
+        contentTable.add(highScoreLabel).row()
+        contentTable.add(backButton).row()
+        contentTable.center()
+
+        table.add(contentTable)
         table.center()
         table.setFillParent(true)
         table.pack()
         return table
     }
 
-    private fun createButton(atlas: TextureAtlas, up: String, down: String): ImageButton {
-        val upRegion = atlas.findRegion(up)
-        val downRegion = atlas.findRegion(down)
-        return ImageButton(TextureRegionDrawable(upRegion), TextureRegionDrawable(downRegion))
-    }
-
-    private fun play() {
-        log.debug("play()")
-        game.screen = GameScreen(game)
-    }
-
-    private fun showHighScore() {
-        log.debug("showHighScore()")
-        game.screen = HighScoreScreen(game)
-    }
-
-    private fun showOptions() {
-        log.debug("showOptions()")
-        game.screen = OptionsScreen(game)
-
+    private fun back() {
+        log.debug("back()")
+        game.screen = MenuScreen(game)
     }
 
     override fun render(delta: Float) {

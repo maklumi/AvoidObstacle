@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Pools
-import com.obstacleavoid.config.Difficulty
+import com.obstacleavoid.common.GameManager
 import com.obstacleavoid.config.WORLD_HEIGHT
 import com.obstacleavoid.config.WORLD_WIDTH
 import com.obstacleavoid.entity.Obstacle
@@ -23,7 +23,7 @@ class GameLogic {
     private var timer = 0f
     val textScore: String
         get() = "SCORE: $displayedScore"
-    private var level = Difficulty.EASY
+    private var level = GameManager.difficultyLevel
     private val obstaclePool = Pools.get(Obstacle::class.java, 40) // max 40 obstacles
 
     val isGameOver: Boolean
@@ -51,7 +51,11 @@ class GameLogic {
 
         if (isCollision()) {
             lives--
-            if (!isGameOver) restart()
+            if (!isGameOver) {
+                restart()
+            } else {
+                GameManager.highScore = score
+            }
         }
     }
 

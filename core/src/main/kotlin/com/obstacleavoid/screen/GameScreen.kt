@@ -25,6 +25,11 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
     override fun render(delta: Float) {
         controller.update(delta)
         renderer.render(delta)
+
+        // change screen should be in this class
+        if (controller.isGameOver){
+            game.screen = MenuScreen(game)
+        }
     }
 
     override fun resize(width: Int, height: Int) {

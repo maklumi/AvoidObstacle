@@ -18,7 +18,9 @@ object SampleInfos {
             CustomActorSample.SAMPLE_INFO,
             ActionsSample.SAMPLE_INFO,
             TableSample.SAMPLE_INFO,
-            SkinSample.SAMPLE_INFO
+            SkinSample.SAMPLE_INFO,
+            AshleyEngineSample.SAMPLE_INFO,
+            AshleySystemSample.SAMPLE_INFO
     )
 
     @JvmStatic

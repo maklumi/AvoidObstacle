@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Pools
+import com.obstacleavoid.AvoidObstacle
+import com.obstacleavoid.assets.HIT_SOUND
 import com.obstacleavoid.common.GameManager
 import com.obstacleavoid.config.WORLD_HEIGHT
 import com.obstacleavoid.config.WORLD_WIDTH
@@ -11,7 +13,7 @@ import com.obstacleavoid.entity.Obstacle
 import com.obstacleavoid.entity.Player
 import com.obstacleavoid.util.debug.DebugCameraController
 
-class GameLogic {
+class GameController(game: AvoidObstacle) {
     val player = Player()
     val obstacles = Array<Obstacle>()
     private var spawnTimer = 0f
@@ -25,7 +27,7 @@ class GameLogic {
         get() = "SCORE: $displayedScore"
     private var level = GameManager.difficultyLevel
     private val obstaclePool = Pools.get(Obstacle::class.java, 40) // max 40 obstacles
-
+    private val hitSound = game.assetManager[HIT_SOUND]
     val isGameOver: Boolean
         get() = lives == 0
 
@@ -79,6 +81,7 @@ class GameLogic {
             if (obstacle.isAlreadyHit) continue
             isOverlap = Intersector.overlaps(player.bounds, obstacle.bounds)
             if (isOverlap) {
+                hitSound.play()
                 obstacle.isAlreadyHit = true
                 return true
             }

@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.obstacleavoid.AvoidObstacle
 import com.obstacleavoid.assets.FONT
 import com.obstacleavoid.assets.GAME_PLAY
-import com.obstacleavoid.assets.UI_TEXTURE_ATLAS
+import com.obstacleavoid.assets.HIT_SOUND
 import com.obstacleavoid.assets.UI_SKIN
 import com.obstacleavoid.config.HUD_HEIGHT
 import com.obstacleavoid.config.HUD_WIDTH
@@ -42,7 +42,7 @@ class LoadingScreen(private val game: AvoidObstacle) : ScreenAdapter() {
         assetManager.load(FONT)
         assetManager.load(GAME_PLAY)
         assetManager.load(UI_SKIN)
-        assetManager.load(UI_TEXTURE_ATLAS)
+        assetManager.load(HIT_SOUND)
     }
 
     override fun render(delta: Float) {

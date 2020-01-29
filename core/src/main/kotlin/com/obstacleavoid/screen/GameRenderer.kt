@@ -24,7 +24,7 @@ import com.obstacleavoid.util.GdxUtils
 import com.obstacleavoid.util.ViewportUtils
 import com.obstacleavoid.util.debug.DebugCameraController
 
-class GameRenderer(private val batch: SpriteBatch, assetManager: AssetManager, private val controller: GameLogic) {
+class GameRenderer(private val batch: SpriteBatch, assetManager: AssetManager, private val controller: GameController) {
 
     private var camera = OrthographicCamera()
     private var viewport = FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera)

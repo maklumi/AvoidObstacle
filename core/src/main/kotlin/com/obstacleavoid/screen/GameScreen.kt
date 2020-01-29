@@ -9,7 +9,7 @@ import com.obstacleavoid.assets.GAME_PLAY
 class GameScreen(private val game: AvoidObstacle) : Screen {
 
     private val log = Logger(GameScreen::class.java.name, Logger.DEBUG)
-    private val controller = GameLogic()
+    private val controller = GameController(game)
     private val assetManager = game.assetManager
     private lateinit var renderer: GameRenderer
 
@@ -27,7 +27,7 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
         renderer.render(delta)
 
         // change screen should be in this class
-        if (controller.isGameOver){
+        if (controller.isGameOver) {
             game.screen = MenuScreen(game)
         }
     }

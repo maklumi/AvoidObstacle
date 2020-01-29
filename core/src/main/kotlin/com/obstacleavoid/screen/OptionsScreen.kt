@@ -31,9 +31,9 @@ class OptionsScreen(game: AvoidObstacle) : MenuScreenBase(game) {
         label.setPosition(HUD_WIDTH / 2, HUD_HEIGHT / 2 + 180, Align.center)
 
         // checkbox has image cell & label cell
-        easy = CheckBox(Difficulty.EASY.name, uiskin)
-        medium = CheckBox(Difficulty.MEDIUM.name, uiskin)
-        hard = CheckBox(Difficulty.HARD.name, uiskin)
+        easy = getCheckBox(Difficulty.EASY.name, uiskin)
+        medium = getCheckBox(Difficulty.MEDIUM.name, uiskin)
+        hard = getCheckBox(Difficulty.HARD.name, uiskin)
 
         checkBoxGroup = ButtonGroup(easy, medium, hard)
         checkBoxGroup.setChecked(GameManager.difficultyLevel.name)
@@ -80,4 +80,11 @@ class OptionsScreen(game: AvoidObstacle) : MenuScreenBase(game) {
         game.screen = MenuScreen(game)
     }
 
+    private fun getCheckBox(text: String, skin: Skin): CheckBox {
+        val cb = CheckBox(text, skin)
+        cb.left().pad(8f) // bring all to left and put padding all around
+        cb.labelCell.pad(8f) // pad second cell 8f all around
+        return cb
+    }
+    // as3sfxr
 }

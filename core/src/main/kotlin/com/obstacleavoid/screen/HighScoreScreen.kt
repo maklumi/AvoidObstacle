@@ -2,24 +2,22 @@ package com.obstacleavoid.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.obstacleavoid.AvoidObstacle
-import com.obstacleavoid.assets.FONT
 import com.obstacleavoid.assets.GAME_PLAY
 import com.obstacleavoid.assets.RegionNames
-import com.obstacleavoid.assets.UI_TEXTURE_ATLAS
+import com.obstacleavoid.assets.UI_SKIN
 import com.obstacleavoid.common.GameManager
 import com.obstacleavoid.config.HUD_HEIGHT
 import com.obstacleavoid.config.HUD_WIDTH
@@ -51,31 +49,24 @@ class HighScoreScreen(private val game: AvoidObstacle) : ScreenAdapter() {
 
         val gamePlayAtlas: TextureAtlas = assetManager.get(GAME_PLAY)
         val backgroundRegion = gamePlayAtlas.findRegion(RegionNames.BACKGROUND)
+        val uiskin = assetManager[UI_SKIN]
 
-        val font = assetManager.get(FONT)
-
-        val uiAtlas: TextureAtlas = assetManager.get(UI_TEXTURE_ATLAS)
-        val panelRegion = uiAtlas.findRegion(RegionNames.PANEL)
-        val backRegion = uiAtlas.findRegion(RegionNames.BACK)
-        val backPressedRegion = uiAtlas.findRegion(RegionNames.BACK_PRESSED)
-        val backButton = ImageButton(TextureRegionDrawable(backRegion), TextureRegionDrawable(backPressedRegion))
+        val backButton = TextButton("BACK", uiskin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
                 back()
             }
         })
 
-        val labelStyle = Label.LabelStyle(font, Color.WHITE)
-
         table.background = TextureRegionDrawable(backgroundRegion)
 
-        val highScoreText = Label("HIGH SCORE", labelStyle)
-        val highScoreLabel = Label("${GameManager.highScore}", labelStyle)
+        val highScoreText = Label("HIGH SCORE", uiskin)
+        val highScoreLabel = Label("${GameManager.highScore}", uiskin)
 
         // setup table
-        val contentTable = Table()
+        val contentTable = Table(uiskin) // remember to put skin to use here also
         contentTable.defaults().pad(20f)
-        contentTable.background = TextureRegionDrawable(panelRegion)
+        contentTable.setBackground(RegionNames.PANEL)
         contentTable.add(highScoreText).row()
         contentTable.add(highScoreLabel).row()
         contentTable.add(backButton).row()

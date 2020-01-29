@@ -1,7 +1,7 @@
 {
   "BitmapFont": {
     "default-font": {
-      "file": "default.fnt"
+      "file": "fonts/ui_font_32.fnt"
     }
   },
   "Color": {
@@ -35,92 +35,22 @@
       "g": 1,
       "r": 1
     }
-  },
-  "TintedDrawable": {
-    "dialogDim": {
-      "name": "white",
-      "color": {
-        "r": 0,
-        "g": 0,
-        "b": 0,
-        "a": 0.45
-      }
-    }
-  },
-  "ButtonStyle": {
-    "default": {
-      "down": "default-round-down",
-      "up": "default-round"
-    },
-    "toggle": {
-      "down": "default-round-down",
-      "checked": "default-round-down",
-      "up": "default-round"
+    "gray": {
+      "a": 1,
+      "b": 0.5,
+      "g": 0.5,
+      "r": 0.5
     }
   },
   "TextButtonStyle": {
     "default": {
-      "down": "default-round-down",
-      "up": "default-round",
-      "font": "default-font",
-      "fontColor": "white"
-    },
-    "toggle": {
-      "down": "default-round-down",
-      "up": "default-round",
-      "checked": "default-round-down",
+      "down": "button-down",
+      "up": "button",
       "font": "default-font",
       "fontColor": "white",
-      "downFontColor": "red"
-    }
-  },
-  "ScrollPaneStyle": {
-    "default": {
-      "vScroll": "default-scroll",
-      "hScrollKnob": "default-round-large",
-      "background": "default-rect",
-      "hScroll": "default-scroll",
-      "vScrollKnob": "default-round-large"
-    }
-  },
-  "SelectBoxStyle": {
-    "default": {
-      "font": "default-font",
-      "fontColor": "white",
-      "background": "default-select",
-      "scrollStyle": "default",
-      "listStyle": {
-        "font": "default-font",
-        "selection": "default-select-selection"
-      }
-    }
-  },
-  "SplitPaneStyle": {
-    "default-vertical": {
-      "handle": "default-splitpane-vertical"
+      "downFontColor": "black",
+      "overFontColor": "gray"
     },
-    "default-horizontal": {
-      "handle": "default-splitpane"
-    }
-  },
-  "WindowStyle": {
-    "default": {
-      "titleFont": "default-font",
-      "background": "default-window",
-      "titleFontColor": "white"
-    },
-    "dialog": {
-      "titleFont": "default-font",
-      "background": "default-window",
-      "titleFontColor": "white",
-      "stageBackground": "dialogDim"
-    }
-  },
-  "SliderStyle": {
-    "default-horizontal": {
-      "background": "default-slider",
-      "knob": "default-slider-knob"
-    }
   },
   "LabelStyle": {
     "default": {
@@ -128,21 +58,16 @@
       "fontColor": "white"
     }
   },
-  "TextFieldStyle": {
-    "default": {
-      "selection": "selection",
-      "background": "textfield",
-      "font": "default-font",
-      "fontColor": "white",
-      "cursor": "cursor"
-    }
-  },
   "CheckBoxStyle": {
     "default": {
+      "down": "button-down",
+      "up": "button",
       "checkboxOn": "check-on",
       "checkboxOff": "check-off",
       "font": "default-font",
-      "fontColor": "red"
+      "fontColor": "red",
+      "downFontColor": "black",
+      "overFontColor": "gray"
     },
     "custom": {
       "checkboxOn": "check-on",
@@ -151,25 +76,4 @@
       "fontColor": "yellow"
     }
   },
-  "ListStyle": {
-    "default": {
-      "fontColorUnselected": "white",
-      "selection": "default-rect-pad",
-      "fontColorSelected": "white",
-      "font": "default-font"
-    }
-  },
-  "TouchpadStyle": {
-    "default": {
-      "background": "default-pane",
-      "knob": "default-round-large"
-    }
-  },
-  "TreeStyle": {
-    "default": {
-      "minus": "tree-minus",
-      "plus": "tree-plus",
-      "selection": "default-select-selection"
-    }
-  }
 }

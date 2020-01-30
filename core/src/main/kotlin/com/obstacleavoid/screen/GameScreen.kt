@@ -6,6 +6,7 @@ import com.obstacleavoid.AvoidObstacle
 import com.obstacleavoid.assets.FONT
 import com.obstacleavoid.assets.GAME_PLAY
 
+@Deprecated("")
 class GameScreen(private val game: AvoidObstacle) : Screen {
 
     private val log = Logger(GameScreen::class.java.name, Logger.DEBUG)

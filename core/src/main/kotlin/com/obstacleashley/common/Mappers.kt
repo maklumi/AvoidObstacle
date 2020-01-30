@@ -6,3 +6,4 @@ import ktx.ashley.mapperFor
 
 val boundsMapper = mapperFor<Bounds>()
 val MOVEMENT = mapperFor<Movement>()
+val POSITION = mapperFor<com.obstacleashley.Position>()

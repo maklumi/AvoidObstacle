@@ -14,7 +14,7 @@ class AvoidObstacle : Game() {
     lateinit var batch: SpriteBatch
 
     override fun create() {
-        Gdx.app.logLevel = Application.LOG_ERROR
+        Gdx.app.logLevel = Application.LOG_DEBUG
         assetManager.logger.level = Logger.ERROR
         batch = SpriteBatch()
         setScreen(LoadingScreen(this))

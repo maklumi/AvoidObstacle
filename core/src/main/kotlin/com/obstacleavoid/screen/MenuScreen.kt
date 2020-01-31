@@ -75,7 +75,8 @@ class MenuScreen(game: AvoidObstacle) : MenuScreenBase(game) {
     private fun play() {
         log.debug("play()")
 //        game.screen = com.obstacleashley.screen.GameScreen(game)
-        game.screen = com.obstaclesprite.screen.GameScreen(game)
+//        game.screen = com.obstaclesprite.screen.GameScreen(game)
+        game.screen = com.obstaclescene2d.screen.GameScreen(game)
     }
 
     private fun showHighScore() {

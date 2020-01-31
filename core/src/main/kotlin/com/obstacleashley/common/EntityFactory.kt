@@ -23,4 +23,20 @@ class EntityFactory(private val engine: PooledEngine) {
     }
 
 
+    fun addObstacle(x: Float, y: Float) {
+        engine.entity {
+            with<Bounds> {
+                bounds.set(x, y, 0.3f)
+            }
+            with<Movement> {
+                this.ySpeed = -0.4f
+            }
+            with<Position> {
+                this.x = x
+                this.y = y
+            }
+            with<CleanUpTag>()
+        }
+    }
+
 }

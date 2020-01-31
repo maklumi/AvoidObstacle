@@ -9,10 +9,7 @@ import com.badlogic.gdx.utils.Logger
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.obstacleashley.common.EntityFactory
-import com.obstacleashley.system.BoundSystem
-import com.obstacleashley.system.MovementSystem
-import com.obstacleashley.system.PlayerSystem
-import com.obstacleashley.system.WorldWrapSystem
+import com.obstacleashley.system.*
 import com.obstacleashley.system.debug.DebugCameraSystem
 import com.obstacleashley.system.debug.DebugRenderSystem
 import com.obstacleashley.system.debug.GridRenderSystem
@@ -43,11 +40,13 @@ class GameScreen(game: AvoidObstacle) : Screen {
                 DebugCameraSystem(camera),
                 DebugRenderSystem(viewport, renderer)
         )
-        val systems = arrayListOf<EntitySystem>(
+        val systems = arrayListOf(
                 PlayerSystem()
                 , MovementSystem()
                 , WorldWrapSystem(viewport)
                 , BoundSystem()
+                , ObstacleSpawnSystem(entityFactory)
+                , CleanUpSystem()
         )
         systems.addAll(debugSystems)
         systems.forEach { engine.addSystem(it) }

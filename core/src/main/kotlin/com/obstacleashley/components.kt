@@ -12,3 +12,4 @@ class Movement(var xSpeed: Float = 0f, var ySpeed: Float = 0f) : Component
 class Position(var x: Float = 0f, var y: Float = 0f) : Component
 
 class WorldWrapTag : Component
+class CleanUpTag : Component

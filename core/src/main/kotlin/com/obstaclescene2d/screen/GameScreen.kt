@@ -4,6 +4,7 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -13,15 +14,18 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.obstacleavoid.AvoidObstacle
 import com.obstacleavoid.assets.FONT
 import com.obstacleavoid.assets.GAME_PLAY
+import com.obstacleavoid.assets.HIT_SOUND
 import com.obstacleavoid.assets.RegionNames
+import com.obstacleavoid.common.GameManager
 import com.obstacleavoid.config.*
+import com.obstacleavoid.screen.MenuScreen
 import com.obstacleavoid.util.GdxUtils
 import com.obstacleavoid.util.ViewportUtils
 import com.obstacleavoid.util.debug.DebugCameraController
 import com.obstaclescene2d.entity.ObstacleActor
 import com.obstaclescene2d.entity.PlayerActor
 
-class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
+class GameScreen(private val game: AvoidObstacle) : ScreenAdapter() {
 
     private val assetManager = game.assetManager
     private val batch = game.batch
@@ -49,7 +53,11 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
     private val obstacles = Array<ObstacleActor>()
     private val obstaclePool = Pools.get(ObstacleActor::class.java)
     private var spawnTimer = 0f
-
+    private var score = 0
+    private var timer = 0f
+    private val isGameOver: Boolean
+        get() = lives == 0
+    private val hitSound = game.assetManager[HIT_SOUND]
 
     override fun show() {
         player.setPosition(startX, startY)
@@ -69,6 +77,7 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
 
         GdxUtils.clearScreen()
         update(delta)
+        updateScoreAndLives(delta)
         viewport.apply()
         renderGamePlay()
 
@@ -91,6 +100,9 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
     }
 
     private fun update(delta: Float) {
+        if (isGameOver) {
+            return
+        }
         createNewObstacle(delta)
         removeObstacleOffScreen()
     }
@@ -152,12 +164,61 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
     }
 
     private fun renderDebug() {
-        renderer.projectionMatrix = camera.combined
-        renderer.begin(ShapeRenderer.ShapeType.Line)
-
-
-        renderer.end()
-
         ViewportUtils.drawGrid(viewport, renderer)
     }
+
+    private fun updateScoreAndLives(delta: Float) {
+        timer += delta
+        if (timer > 2f) {
+            timer = 0f
+            score += MathUtils.random(10, 30)
+        }
+
+        smoothOutScoreDisplay(delta)
+
+        if (isCollision()) {
+            lives--
+            if (!isGameOver) {
+                restart()
+            } else {
+                GameManager.highScore = score
+                game.screen = MenuScreen(game)
+            }
+        }
+    }
+
+    private fun smoothOutScoreDisplay(delta: Float) {
+        if (displayedScore < score) {
+//            displayedScore = Math.min(score, displayedScore + (delta * 60).toInt()) // is same as below
+            displayedScore = score.coerceAtMost(displayedScore + (delta * 60).toInt())
+        }
+    }
+
+    private fun isCollision(): Boolean {
+        var isOverlap = false
+        val iterable = Array.ArrayIterable<ObstacleActor>(obstacles)
+        for (obstacle in iterable) {
+            if (obstacle.isAlreadyHit) continue
+            isOverlap = Intersector.overlaps(player.circle, obstacle.circle)
+            if (isOverlap) {
+                hitSound.play()
+                obstacle.isAlreadyHit = true
+                return true
+            }
+        }
+        return isOverlap
+    }
+
+    private fun restart() {
+        val iterable = Array.ArrayIterable<ObstacleActor>(obstacles)
+        for (obstacle in iterable) {
+            // remove from stage
+            obstacle.remove()
+            // return to pool
+            obstaclePool.free(obstacle)
+        }
+        obstacles.clear()
+        player.setPosition(startX, startY)
+    }
+
 }

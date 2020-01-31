@@ -73,6 +73,7 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
                 , ObstacleSpawnSystem(entityFactory)
                 , CleanUpSystem()
                 , CollisionSystem(listener)
+                , ScoreSystem()
                 , HudRenderSystem(hudViewport, game.batch, uiFont)
         )
         systems.addAll(debugSystems)
@@ -88,6 +89,10 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
         if (reset) {
             entityFactory.addPlayer()
             reset = false
+        }
+        if (GameManager.isGameOver) {
+            GameManager.reset()
+            game.screen = MenuScreen(game)
         }
     }
 

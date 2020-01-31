@@ -16,12 +16,14 @@ class HudRenderSystem(
 ) : EntitySystem() {
 
     private val glyphLayout = GlyphLayout()
+    private var displayedScore = 0
 
     override fun update(deltaTime: Float) {
         viewport.apply()
         batch.projectionMatrix = viewport.camera.combined
         batch.begin()
         drawHud()
+        smoothOutScoreDisplay(deltaTime)
         batch.end()
     }
 
@@ -29,6 +31,13 @@ class HudRenderSystem(
         glyphLayout.setText(font, "LIVES: ${GameManager.lives}")
         font.draw(batch, "LIVES: ${GameManager.lives}", 20f, HUD_HEIGHT - glyphLayout.height)
         glyphLayout.setText(font, "SCORES: ${GameManager.scores}")
-        font.draw(batch, "SCORES: ${GameManager.scores}", HUD_WIDTH - glyphLayout.width - 20f, HUD_HEIGHT - glyphLayout.height)
+        font.draw(batch, "SCORES: $displayedScore", HUD_WIDTH - glyphLayout.width - 20f, HUD_HEIGHT - glyphLayout.height)
+    }
+
+    private fun smoothOutScoreDisplay(delta: Float) {
+        val score = GameManager.scores
+        if (displayedScore < score) {
+            displayedScore = score.coerceAtMost(displayedScore + (delta * 60).toInt())
+        }
     }
 }

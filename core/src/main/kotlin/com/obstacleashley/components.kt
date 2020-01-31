@@ -10,8 +10,8 @@ class PlayerTag : Component
 
 class Movement(var xSpeed: Float = 0f, var ySpeed: Float = 0f) : Component, Pool.Poolable {
     override fun reset() {
-        var xSpeed = 0f
-        var ySpeed = 0f
+        xSpeed = 0f
+        ySpeed = 0f
     }
 }
 

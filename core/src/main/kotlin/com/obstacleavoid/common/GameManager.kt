@@ -40,4 +40,8 @@ object GameManager {
     val isGameOver: Boolean
         get() = lives <= 0
 
+    fun reset() {
+        lives = 3
+        scores = 0
+    }
 }

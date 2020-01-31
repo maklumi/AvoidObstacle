@@ -9,15 +9,20 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.obstacleashley.common.EntityFactory
 import com.obstacleashley.system.*
+import com.obstacleashley.system.collision.CollisionListener
+import com.obstacleashley.system.collision.CollisionSystem
 import com.obstacleashley.system.debug.DebugCameraSystem
 import com.obstacleashley.system.debug.DebugRenderSystem
 import com.obstacleashley.system.debug.GridRenderSystem
 import com.obstacleavoid.AvoidObstacle
 import com.obstacleavoid.assets.FONT
+import com.obstacleavoid.assets.HIT_SOUND
+import com.obstacleavoid.common.GameManager
 import com.obstacleavoid.config.HUD_HEIGHT
 import com.obstacleavoid.config.HUD_WIDTH
 import com.obstacleavoid.config.WORLD_HEIGHT
 import com.obstacleavoid.config.WORLD_WIDTH
+import com.obstacleavoid.screen.MenuScreen
 import com.obstacleavoid.util.GdxUtils
 
 class GameScreen(private val game: AvoidObstacle) : Screen {
@@ -32,6 +37,7 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
 
     private val engine = PooledEngine()
     private val entityFactory = EntityFactory(engine)
+    private var reset = false
 
     override fun show() {
         log.debug("show()")
@@ -39,6 +45,20 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
         renderer = ShapeRenderer()
         hudViewport = FitViewport(HUD_WIDTH, HUD_HEIGHT)
         val uiFont = assetManager[FONT]
+        val hitSound = assetManager[HIT_SOUND]
+
+        val listener = object : CollisionListener {
+            override fun onCollision() {
+                hitSound.play()
+                GameManager.lives--
+                if (GameManager.isGameOver) {
+                    GameManager.highScore = GameManager.scores
+                } else {
+                    engine.removeAllEntities()
+                    reset = true
+                }
+            }
+        }
 
         val debugSystems = arrayListOf(
                 GridRenderSystem(viewport, renderer),
@@ -52,7 +72,7 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
                 , BoundSystem()
                 , ObstacleSpawnSystem(entityFactory)
                 , CleanUpSystem()
-                , CollisionSystem()
+                , CollisionSystem(listener)
                 , HudRenderSystem(hudViewport, game.batch, uiFont)
         )
         systems.addAll(debugSystems)
@@ -64,6 +84,11 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
     override fun render(delta: Float) {
         GdxUtils.clearScreen()
         engine.update(delta)
+
+        if (reset) {
+            entityFactory.addPlayer()
+            reset = false
+        }
     }
 
     override fun resize(width: Int, height: Int) {

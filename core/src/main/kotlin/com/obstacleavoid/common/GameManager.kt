@@ -37,4 +37,7 @@ object GameManager {
 
     var scores: Int = 0
 
+    val isGameOver: Boolean
+        get() = lives <= 0
+
 }

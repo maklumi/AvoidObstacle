@@ -2,6 +2,7 @@ package com.obstacleashley.common
 
 import com.badlogic.ashley.core.PooledEngine
 import com.obstacleashley.*
+import com.obstacleavoid.common.GameManager
 import ktx.ashley.entity
 
 class EntityFactory(private val engine: PooledEngine) {
@@ -29,7 +30,7 @@ class EntityFactory(private val engine: PooledEngine) {
                 bounds.set(x, y, 0.3f)
             }
             with<Movement> {
-                this.ySpeed = -0.4f
+                ySpeed = -GameManager.difficultyLevel.speed
             }
             with<Position> {
                 this.x = x

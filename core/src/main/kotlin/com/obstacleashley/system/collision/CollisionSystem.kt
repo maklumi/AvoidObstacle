@@ -1,4 +1,4 @@
-package com.obstacleashley.system
+package com.obstacleashley.system.collision
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntitySystem
@@ -12,7 +12,7 @@ import com.obstacleashley.common.boundsMapper
 import ktx.ashley.allOf
 import ktx.ashley.get
 
-class CollisionSystem : EntitySystem() {
+class CollisionSystem(private val listener: CollisionListener) : EntitySystem() {
 
     private val playerFamily = allOf(PlayerTag::class, Position::class).get()
     private val obstacleFamily = allOf(ObstacleTag::class, Position::class).get()
@@ -28,6 +28,7 @@ class CollisionSystem : EntitySystem() {
                 if (isCollision(player, obstacle)) {
                     obstacleComp.isHit = true
                     log.debug("collision with obstacle")
+                    listener.onCollision()
                 }
             }
         }

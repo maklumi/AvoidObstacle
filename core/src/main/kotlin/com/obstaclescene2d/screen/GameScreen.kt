@@ -4,7 +4,11 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.Pools
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.obstacleavoid.AvoidObstacle
 import com.obstacleavoid.assets.FONT
@@ -14,6 +18,7 @@ import com.obstacleavoid.config.*
 import com.obstacleavoid.util.GdxUtils
 import com.obstacleavoid.util.ViewportUtils
 import com.obstacleavoid.util.debug.DebugCameraController
+import com.obstaclescene2d.entity.ObstacleActor
 import com.obstaclescene2d.entity.PlayerActor
 
 class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
@@ -38,11 +43,20 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
     private val startY = PLAYER_SIZE / 2
     private val gameAtlas = assetManager[GAME_PLAY]
     private val playerRegion = gameAtlas.findRegion(RegionNames.PLAYER)
+    private val obstacleRegion = gameAtlas.findRegion(RegionNames.OBSTACLE)
+    private val backgroundRegion = gameAtlas.findRegion(RegionNames.BACKGROUND)
+    private val background = Image(backgroundRegion)
+    private val obstacles = Array<ObstacleActor>()
+    private val obstaclePool = Pools.get(ObstacleActor::class.java)
+    private var spawnTimer = 0f
+
 
     override fun show() {
         player.setPosition(startX, startY)
         player.region = playerRegion
         stage.isDebugAll = true
+        background.setSize(WORLD_WIDTH, WORLD_HEIGHT)
+        stage.addActor(background)
         stage.addActor(player)
         DebugCameraController.setStartPosition(WORLD_WIDTH / 2, WORLD_HEIGHT / 2)
     }
@@ -54,7 +68,7 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
         }
 
         GdxUtils.clearScreen()
-
+        update(delta)
         viewport.apply()
         renderGamePlay()
 
@@ -74,6 +88,36 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
 
     override fun dispose() {
         renderer.dispose()
+    }
+
+    private fun update(delta: Float) {
+        createNewObstacle(delta)
+        removeObstacleOffScreen()
+    }
+
+    private fun createNewObstacle(delta: Float) {
+        spawnTimer += delta
+        if (spawnTimer > .5f) {
+            val obstacle = obstaclePool.obtain()
+            val x = MathUtils.random(0f, WORLD_WIDTH - OBSTACLE_SIZE)
+            val y = WORLD_HEIGHT + OBSTACLE_SIZE
+            obstacle.setPosition(x, y)
+            obstacle.region = obstacleRegion
+            obstacles.add(obstacle)
+            stage.addActor(obstacle)
+            spawnTimer = 0f
+        }
+    }
+
+    private fun removeObstacleOffScreen() {
+        val iterable = Array.ArrayIterable<ObstacleActor>(obstacles)
+        for (obstacle in iterable) {
+            if (obstacle.y < -OBSTACLE_SIZE) {
+                obstacles.removeValue(obstacle, true)
+                obstaclePool.free(obstacle)
+                stage.actors.removeValue(obstacle, true)
+            }
+        }
     }
 
     private fun renderGamePlay() {

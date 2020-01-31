@@ -32,4 +32,9 @@ object GameManager {
             preferences.putString(DIFFICULTY, field.toString())
             preferences.flush()
         }
+
+    var lives: Int = 3
+
+    var scores: Int = 0
+
 }

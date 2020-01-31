@@ -36,6 +36,7 @@ class EntityFactory(private val engine: PooledEngine) {
                 this.y = y
             }
             with<CleanUpTag>()
+            with<ObstacleTag>()
         }
     }
 

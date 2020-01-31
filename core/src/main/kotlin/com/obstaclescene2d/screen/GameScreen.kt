@@ -4,16 +4,15 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.obstacleavoid.AvoidObstacle
 import com.obstacleavoid.assets.FONT
-import com.obstacleavoid.config.HUD_HEIGHT
-import com.obstacleavoid.config.HUD_WIDTH
-import com.obstacleavoid.config.WORLD_HEIGHT
-import com.obstacleavoid.config.WORLD_WIDTH
+import com.obstacleavoid.config.*
 import com.obstacleavoid.util.GdxUtils
 import com.obstacleavoid.util.ViewportUtils
 import com.obstacleavoid.util.debug.DebugCameraController
+import com.obstaclescene2d.entity.PlayerActor
 
 class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
 
@@ -23,6 +22,7 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
 
     private var camera = OrthographicCamera()
     private var viewport = FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera)
+    private val stage = Stage(viewport, batch)
     private var renderer = ShapeRenderer()
 
     private val uiCamera = OrthographicCamera()
@@ -31,9 +31,14 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
 
     private var lives = 3
     private var displayedScore = 0
-
+    private val player = PlayerActor()
+    private val startX = (WORLD_WIDTH - PLAYER_SIZE) / 2
+    private val startY = PLAYER_SIZE / 2
 
     override fun show() {
+        player.setPosition(startX, startY)
+        stage.isDebugAll = true
+        stage.addActor(player)
         DebugCameraController.setStartPosition(WORLD_WIDTH / 2, WORLD_HEIGHT / 2)
     }
 
@@ -73,6 +78,9 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
         drawGamePlay()
 
         batch.end()
+
+        stage.act()
+        stage.draw()
     }
 
     private fun drawGamePlay() {

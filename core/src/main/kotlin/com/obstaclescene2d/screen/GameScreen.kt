@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.obstacleavoid.AvoidObstacle
 import com.obstacleavoid.assets.FONT
+import com.obstacleavoid.assets.GAME_PLAY
+import com.obstacleavoid.assets.RegionNames
 import com.obstacleavoid.config.*
 import com.obstacleavoid.util.GdxUtils
 import com.obstacleavoid.util.ViewportUtils
@@ -34,9 +36,12 @@ class GameScreen(game: AvoidObstacle) : ScreenAdapter() {
     private val player = PlayerActor()
     private val startX = (WORLD_WIDTH - PLAYER_SIZE) / 2
     private val startY = PLAYER_SIZE / 2
+    private val gameAtlas = assetManager[GAME_PLAY]
+    private val playerRegion = gameAtlas.findRegion(RegionNames.PLAYER)
 
     override fun show() {
         player.setPosition(startX, startY)
+        player.region = playerRegion
         stage.isDebugAll = true
         stage.addActor(player)
         DebugCameraController.setStartPosition(WORLD_WIDTH / 2, WORLD_HEIGHT / 2)

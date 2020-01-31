@@ -36,7 +36,7 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
     private lateinit var renderer: ShapeRenderer
 
     private val engine = PooledEngine()
-    private val entityFactory = EntityFactory(engine)
+    private val entityFactory = EntityFactory(engine, assetManager)
     private var reset = false
 
     override fun show() {
@@ -74,12 +74,13 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
                 , CleanUpSystem()
                 , CollisionSystem(listener)
                 , ScoreSystem()
+                , RenderSystem(viewport, game.batch)
                 , HudRenderSystem(hudViewport, game.batch, uiFont)
         )
         systems.addAll(debugSystems)
         systems.forEach { engine.addSystem(it) }
 
-        entityFactory.addPlayer()
+        addBackgroundAndPlayer()
     }
 
     override fun render(delta: Float) {
@@ -87,13 +88,18 @@ class GameScreen(private val game: AvoidObstacle) : Screen {
         engine.update(delta)
 
         if (reset) {
-            entityFactory.addPlayer()
+            addBackgroundAndPlayer()
             reset = false
         }
         if (GameManager.isGameOver) {
             GameManager.reset()
             game.screen = MenuScreen(game)
         }
+    }
+
+    private fun addBackgroundAndPlayer() {
+        entityFactory.addBackground()
+        entityFactory.addPlayer()
     }
 
     override fun resize(width: Int, height: Int) {

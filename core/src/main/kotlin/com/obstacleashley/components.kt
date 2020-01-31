@@ -1,6 +1,7 @@
 package com.obstacleashley
 
 import com.badlogic.ashley.core.Component
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Circle
 import com.badlogic.gdx.utils.Pool
 
@@ -25,3 +26,6 @@ class ObstacleTag(var isHit: Boolean = false) : Component, Pool.Poolable {
         isHit = false
     }
 }
+
+class Texture(var region: TextureRegion? = null) : Component
+class Dimension(var width: Float = 0f, var height: Float = 0f) : Component

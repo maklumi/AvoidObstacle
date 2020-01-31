@@ -1,10 +1,7 @@
 package com.obstacleashley.common
 
 import com.badlogic.ashley.core.PooledEngine
-import com.obstacleashley.Bounds
-import com.obstacleashley.Movement
-import com.obstacleashley.PlayerTag
-import com.obstacleashley.Position
+import com.obstacleashley.*
 import ktx.ashley.entity
 
 class EntityFactory(private val engine: PooledEngine) {
@@ -21,6 +18,7 @@ class EntityFactory(private val engine: PooledEngine) {
                 x = 1.5f
                 y = 3.2f
             }
+            with<WorldWrapTag>()
         }
     }
 

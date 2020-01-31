@@ -19,5 +19,6 @@ class MovementSystem : IteratingSystem(
         val pc = entity[POSITION]!!
 
         pc.x += mc.xSpeed
+        pc.y += mc.ySpeed
     }
 }

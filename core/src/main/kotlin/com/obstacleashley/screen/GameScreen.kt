@@ -12,6 +12,7 @@ import com.obstacleashley.common.EntityFactory
 import com.obstacleashley.system.BoundSystem
 import com.obstacleashley.system.MovementSystem
 import com.obstacleashley.system.PlayerSystem
+import com.obstacleashley.system.WorldWrapSystem
 import com.obstacleashley.system.debug.DebugCameraSystem
 import com.obstacleashley.system.debug.DebugRenderSystem
 import com.obstacleashley.system.debug.GridRenderSystem
@@ -45,6 +46,7 @@ class GameScreen(game: AvoidObstacle) : Screen {
         val systems = arrayListOf<EntitySystem>(
                 PlayerSystem()
                 , MovementSystem()
+                , WorldWrapSystem(viewport)
                 , BoundSystem()
         )
         systems.addAll(debugSystems)

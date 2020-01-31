@@ -23,6 +23,12 @@ class PlayerSystem : IteratingSystem(
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             movement.xSpeed -= MAX_SPEED_X
         }
+        movement.ySpeed = 0f
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            movement.ySpeed += MAX_SPEED_X
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            movement.ySpeed -= MAX_SPEED_X
+        }
     }
 
     companion object {
